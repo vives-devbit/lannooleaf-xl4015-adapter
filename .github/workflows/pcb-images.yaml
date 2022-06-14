@@ -1,0 +1,29 @@
+name: Generate PCB Images
+
+on:
+  push:
+    paths:
+      - LannooLeaf-poweradapter.kicad_pcb
+
+jobs:
+  build:
+    container:
+      image: yaqwsx/kikit:v1.0.0
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: build-example
+      run: |
+        mkdir -p ./img
+        pcbdraw LannooLeaf-poweradapter.kicad_pcb ./img/front.png --dpi 600
+        pcbdraw LannooLeaf-poweradapter.kicad_pcb ./img/back.png --back --dpi 600
+          
+    - name: Commit changes
+      uses: EndBug/add-and-commit@v7
+      with:
+        author_name: Sille Van Landschoot
+        author_email: info@sillevl.be
+        message: 'Update generated images'
+        add: './img'
